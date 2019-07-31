@@ -1,0 +1,79 @@
+[
+    {
+        "locations": [ "Light" ],
+        "name": "the taurus eye of a shadow dragon",
+        "level": 23,
+        "align_restrictions": [ "Good", "Neutral" ],
+        "hr": 5,
+        "sbr": -2
+    },
+    {
+        "locations": [ "Finger" ],
+        "name": "a blackstone ring",
+        "level": 29,
+        "align_restrictions": [ "Good", "Neutral" ],
+        "class_restrictions": [ "Cleric", "Mage" ],
+        "hr": 1,
+        "dr": 4 
+    },
+    {
+        "locations": [ "Neck" ],
+        "name": "the Mystical Talisman of Medievia",
+        "level": 0,
+        "ac_apply": 20,
+        "hp": 100,
+        "dr": 7
+    },
+    {
+        "locations": [ "Body" ],
+        "name": "the Love of Tanova",
+        "level": 28,
+        "align_restrictions": [ "Good", "Neutral" ],
+        "class_restrictions": [ "Cleric", "Mage" ],
+        "ac_apply": 7,
+        "hr": 6,
+        "spet": -3
+    },
+    {
+        "locations": [ "Head" ],
+        "name": "a one-horned skull",
+        "level": 29,
+        "align_restrictions": [ "Good" ],
+        "class_restrictions": [ "Cleric", "Mage" ],
+        "ac_apply": 8,
+        "mana": -51,
+        "dr": 6
+    },
+    {
+        "locations": [ "Head" ],
+        "name": "Djavul's helm",
+        "level": 24,
+        "align_restrictions": [ "Evil", "Good" ],
+        "class_restrictions": [ "Cleric", "Mage" ],
+        "dr": 4,
+        "hp": 20
+    },
+    {
+        "locations": [ "Legs" ],
+        "name": "leggings of gleaming black dragon scales",
+        "level": 27,
+        "class_restrictions": [ "Cleric", "Mage" ],
+        "ac_apply": 6,
+        "hr": 4,
+        "dr": 1
+    },
+    {
+        "locations": [ "Aura" ],
+        "name": "the gossamer image of a mithril unicorn",
+        "hp": 50,
+        "mana": 50,
+        "ac_apply": 20
+    },
+    {
+        "locations": [ "Spirit" ],
+        "name": "the Spirit of Medievia",
+        "hp": 50,
+        "mana": 50,
+        "ss": -1
+    }
+]
