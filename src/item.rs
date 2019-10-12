@@ -57,7 +57,8 @@ pub struct Item {
 
 impl Display for Item {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{} - {}", self.value(), self.name)
+        // TODO: Show its stats
+        write!(f, "{}", self.name)
     }
 }
 

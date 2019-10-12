@@ -1,6 +1,9 @@
+use crate::error::{Error, Result};
 use crate::item::{Item, Location};
+use crate::itemset::ItemSet;
 use itertools::Itertools;
 use serde::Deserialize;
+use std::convert::TryFrom;
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq)]
 pub enum Align {
@@ -60,7 +63,8 @@ impl Character {
         ch
     }
 
-    pub fn solve(&self) {
+    // TODO: Switch to Result, and remove `.ok()?` calls.
+    pub fn find_best_item_set(&self) -> Result<ItemSet> {
         println!("Usable items per slot:");
         println!("    Light: {}", self.lights.len());
         println!("    Neck:  {}", self.necks.len());
@@ -68,7 +72,13 @@ impl Character {
         println!("    Aura:  {}", self.auras.len());
         println!("    Spirit:  {}", self.spirits.len());
 
-        let usable = vec![&self.heads, &self.necks];
+        let usable = vec![
+            &self.lights,
+            &self.necks,
+            &self.heads,
+            &self.auras,
+            &self.spirits,
+        ];
 
         let upper_limit = usable
             .iter()
@@ -76,24 +86,22 @@ impl Character {
 
         println!("There are at most {} combinations", upper_limit);
 
-        let combinations = usable.into_iter().multi_cartesian_product().clone();
+        let mut combinations = usable.into_iter().multi_cartesian_product().clone();
 
-        let mut best: Option<Vec<&Item>> = None;
-        let mut best_value = 0;
+        let mut best = match combinations.next() {
+            Some(c) => ItemSet::try_from(c)?,
+            None => return Err(Error::NoCombinations),
+        };
 
-        for set in combinations {
-            // TODO: Check it's usable
-            let value = set.iter().fold(0, |acc, item| acc + item.value());
-            if best.is_none() || value > best_value {
-                best = Some(set);
-                best_value = value;
+        for combination in combinations {
+            let set = ItemSet::try_from(combination)?;
+
+            if set.value > best.value {
+                best = set;
             }
         }
 
-        match best {
-            Some(set) => println!("Found a set with a value of {}: {:?}", best_value, set),
-            None => println!("Didn't find any sets"),
-        }
+        Ok(best)
     }
 
     fn can_use(&self, eq: &Item) -> bool {
