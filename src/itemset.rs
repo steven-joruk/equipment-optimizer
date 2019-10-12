@@ -54,10 +54,10 @@ impl<'a> TryFrom<Vec<&'a Item>> for ItemSet<'a> {
 impl<'a> fmt::Display for ItemSet<'a> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         writeln!(f, "The set has a total value of {}", self.value)?;
-        writeln!(f, "light:  {}", self.light)?;
-        writeln!(f, "neck:   {}", self.neck)?;
-        writeln!(f, "head:   {}", self.head)?;
-        writeln!(f, "spirit: {}", self.spirit)?;
-        writeln!(f, "aura:   {}", self.aura)
+        writeln!(f, "    Light:  {}", self.light)?;
+        writeln!(f, "    Neck:   {}", self.neck)?;
+        writeln!(f, "    Head:   {}", self.head)?;
+        writeln!(f, "    Spirit: {}", self.spirit)?;
+        writeln!(f, "    Aura:   {}", self.aura)
     }
 }

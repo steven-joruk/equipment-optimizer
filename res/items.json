@@ -1,14 +1,6 @@
 [
     {
         "locations": [ "Light" ],
-        "name": "FAKE LIGHT - REMOVE",
-        "level": 23,
-        "hr": 5,
-        "sbr": -2
-    },
-
-    {
-        "locations": [ "Light" ],
         "name": "the taurus eye of a shadow dragon",
         "level": 23,
         "align_restrictions": [ "Good", "Neutral" ],

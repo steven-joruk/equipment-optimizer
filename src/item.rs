@@ -64,7 +64,12 @@ impl Display for Item {
 
 impl Item {
     pub fn value(&self) -> i32 {
-        i32::from(self.hr * 5 + self.dr * 10 + self.ss * 4)
+        let mut value = i32::from(self.hp);
+        value += i32::from(if self.mana > 0 { self.mana / 2 } else { 0 });
+        value += i32::from(self.hr * 5);
+        value += i32::from(self.dr * 10);
+        value += i32::from(self.ss * -4);
+        value
     }
 }
 
@@ -86,5 +91,33 @@ impl Ord for Item {
 impl PartialOrd for Item {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other))
+    }
+}
+
+impl Item {
+    pub fn none() -> Item {
+        Item {
+            name: "None".into(),
+            locations: vec![
+                Location::Light,
+                Location::Finger,
+                Location::Neck,
+                Location::Body,
+                Location::Head,
+                Location::Legs,
+                Location::Feet,
+                Location::Hands,
+                Location::Arms,
+                Location::Shield,
+                Location::About,
+                Location::Waist,
+                Location::Wrist,
+                Location::Wielded,
+                Location::Held,
+                Location::Aura,
+                Location::Spirit,
+            ],
+            ..Default::default()
+        }
     }
 }

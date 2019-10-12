@@ -38,11 +38,11 @@ impl Character {
             level,
             class,
             align,
-            lights: Vec::new(),
-            necks: Vec::new(),
-            heads: Vec::new(),
-            auras: Vec::new(),
-            spirits: Vec::new(),
+            lights: vec![Item::none()],
+            necks: vec![Item::none()],
+            heads: vec![Item::none()],
+            auras: vec![Item::none()],
+            spirits: vec![Item::none()],
         };
 
         for item in items {
@@ -65,12 +65,15 @@ impl Character {
 
     // TODO: Switch to Result, and remove `.ok()?` calls.
     pub fn find_best_item_set(&self) -> Result<ItemSet> {
-        println!("Usable items per slot:");
-        println!("    Light: {}", self.lights.len());
-        println!("    Neck:  {}", self.necks.len());
-        println!("    Head:  {}", self.heads.len());
-        println!("    Aura:  {}", self.auras.len());
-        println!("    Spirit:  {}", self.spirits.len());
+        println!(
+            "Usable items per slot for a level {} {:?} {:?}:",
+            self.level, self.align, self.class
+        );
+        println!("    Light:  {}", self.lights.len() - 1);
+        println!("    Neck:   {}", self.necks.len() - 1);
+        println!("    Head:   {}", self.heads.len() - 1);
+        println!("    Spirit: {}", self.spirits.len() - 1);
+        println!("    Aura:   {}", self.auras.len() - 1);
 
         let usable = vec![
             &self.lights,
