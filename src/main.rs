@@ -8,7 +8,7 @@ use crate::error::Result;
 use crate::item::Item;
 
 fn main() -> Result<()> {
-    let items: Vec<Item> = serde_json::from_str(include_str!("../res/items.json")).unwrap();
+    let items: Vec<Item> = serde_json::from_str(include_str!("../res/items.json"))?;
 
     println!("Loaded {} items", items.len());
 
