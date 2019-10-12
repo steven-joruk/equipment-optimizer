@@ -1,6 +1,7 @@
 use crate::error::{Error, Result};
 use crate::item::{Item, Location};
 use crate::itemset::ItemSet;
+use enum_map::EnumMap;
 use itertools::Itertools;
 use serde::Deserialize;
 use std::convert::TryFrom;
@@ -24,12 +25,7 @@ pub struct Character {
     level: u8,
     class: Class,
     align: Align,
-    // TODO: Use an array indexed by enums if/when it becomes usable.
-    lights: Vec<Item>,
-    necks: Vec<Item>,
-    heads: Vec<Item>,
-    auras: Vec<Item>,
-    spirits: Vec<Item>,
+    usable: EnumMap<Location, Vec<Item>>,
 }
 
 impl Character {
@@ -38,58 +34,69 @@ impl Character {
             level,
             class,
             align,
-            lights: vec![Item::none()],
-            necks: vec![Item::none()],
-            heads: vec![Item::none()],
-            auras: vec![Item::none()],
-            spirits: vec![Item::none()],
+            usable: Default::default(),
         };
 
         for item in items {
             if ch.can_use(&item) {
                 for loc in &item.locations {
-                    match loc {
-                        Location::Light => ch.lights.push(item.clone()),
-                        Location::Neck => ch.necks.push(item.clone()),
-                        Location::Head => ch.heads.push(item.clone()),
-                        Location::Aura => ch.auras.push(item.clone()),
-                        Location::Spirit => ch.spirits.push(item.clone()),
-                        _ => {}
-                    }
+                    ch.usable[*loc].push(item.clone());
                 }
+            }
+        }
+
+        // Itertools multi_cartesian_product will produce no combinations if
+        // any of the sub-iterators have no items, so fill in the gaps with a
+        // placeholder.
+        for items in ch.usable.values_mut() {
+            if items.is_empty() {
+                // TODO: Overwrite items which have matching (or worse) stats
+                // in the same slot.
+                items.push(Item::none())
             }
         }
 
         ch
     }
 
-    // TODO: Switch to Result, and remove `.ok()?` calls.
     pub fn find_best_item_set(&self) -> Result<ItemSet> {
         println!(
             "Usable items per slot for a level {} {:?} {:?}:",
             self.level, self.align, self.class
         );
-        println!("    Light:  {}", self.lights.len() - 1);
-        println!("    Neck:   {}", self.necks.len() - 1);
-        println!("    Head:   {}", self.heads.len() - 1);
-        println!("    Spirit: {}", self.spirits.len() - 1);
-        println!("    Aura:   {}", self.auras.len() - 1);
 
-        let usable = vec![
-            &self.lights,
-            &self.necks,
-            &self.heads,
-            &self.auras,
-            &self.spirits,
-        ];
-
-        let upper_limit = usable
-            .iter()
-            .fold(0, |acc, vec| std::cmp::max(acc, 1) * vec.len());
+        let mut upper_limit = 0;
+        for (k, v) in &self.usable {
+            println!("    {:?}: {}", k, v.len());
+            upper_limit = if upper_limit == 0 { 1 } else { upper_limit } * v.len();
+        }
 
         println!("There are at most {} combinations", upper_limit);
 
-        let mut combinations = usable.into_iter().multi_cartesian_product().clone();
+        let mut combinations = vec![
+            &self.usable[Location::Light],
+            &self.usable[Location::Finger],
+            &self.usable[Location::Finger],
+            &self.usable[Location::Neck],
+            &self.usable[Location::Neck],
+            &self.usable[Location::Body],
+            &self.usable[Location::Head],
+            &self.usable[Location::Legs],
+            &self.usable[Location::Feet],
+            &self.usable[Location::Hands],
+            &self.usable[Location::Arms],
+            &self.usable[Location::Offhand],
+            &self.usable[Location::About],
+            &self.usable[Location::Waist],
+            &self.usable[Location::Wrist],
+            &self.usable[Location::Wrist],
+            &self.usable[Location::Wielded],
+            &self.usable[Location::Held],
+            &self.usable[Location::Aura],
+            &self.usable[Location::Spirit],
+        ]
+        .into_iter()
+        .multi_cartesian_product();
 
         let mut best = match combinations.next() {
             Some(c) => ItemSet::try_from(c)?,

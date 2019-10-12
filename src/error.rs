@@ -1,4 +1,3 @@
-use crate::item::Location;
 use std::fmt::Display;
 
 pub type Result<T> = std::result::Result<T, Error>;
@@ -7,7 +6,6 @@ pub type Result<T> = std::result::Result<T, Error>;
 pub enum Error {
     SerdeJson(serde_json::Error),
     NoCombinations,
-    MissingItem { loc: Location },
     ValidatingItemSet { msg: String },
 }
 
@@ -24,7 +22,6 @@ impl Display for Error {
         match self {
             Self::SerdeJson(e) => e.fmt(f),
             Self::NoCombinations => write!(f, "There are no item set combinations"),
-            Self::MissingItem { loc } => write!(f, "Failed to assign {:?} to the item set", loc),
             Self::ValidatingItemSet { msg } => {
                 write!(f, "Validation of the item set failed: {}", msg)
             }

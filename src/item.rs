@@ -1,4 +1,5 @@
 use crate::character::{Align, Class};
+use enum_map::Enum;
 use serde::Deserialize;
 
 use std::{
@@ -6,7 +7,7 @@ use std::{
     fmt::{self, Display},
 };
 
-#[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq)]
+#[derive(Clone, Copy, Debug, Deserialize, Enum, Eq, PartialEq)]
 pub enum Location {
     Light,
     Finger,
@@ -17,7 +18,7 @@ pub enum Location {
     Feet,
     Hands,
     Arms,
-    Shield,
+    Offhand,
     About,
     Waist,
     Wrist,
@@ -108,7 +109,7 @@ impl Item {
                 Location::Feet,
                 Location::Hands,
                 Location::Arms,
-                Location::Shield,
+                Location::Offhand,
                 Location::About,
                 Location::Waist,
                 Location::Wrist,

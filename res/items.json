@@ -35,6 +35,15 @@
         "spet": -3
     },
     {
+        "locations": [ "Body" ],
+        "name": "Drow chainmail",
+        "level": 27,
+        "ac_apply": 7,
+        "align_restrictions": [ "Good", "Neutral" ],
+        "mana": 56,
+        "ss": -3
+    },
+    {
         "locations": [ "Head" ],
         "name": "a one-horned skull",
         "level": 29,
@@ -43,6 +52,14 @@
         "ac_apply": 8,
         "mana": -51,
         "dr": 6
+    },
+    {
+        "locations": [ "Head" ],
+        "name": "the Helm of the High Forest",
+        "level": 22,
+        "ac_apply": 6,
+        "hr": 4,
+        "mana": 35
     },
     {
         "locations": [ "Head" ],
