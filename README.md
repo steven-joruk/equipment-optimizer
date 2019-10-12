@@ -10,5 +10,3 @@ An example RPG equipment combination optimizer, targetted at Medievia but it sho
 * [ ] Benchmarks
 * [ ] Tests
 * [ ] Parallel evaluation, perhaps using rayon
-* [ ] Store usable items in an array indexed by an enum
-* [ ] Progress bar

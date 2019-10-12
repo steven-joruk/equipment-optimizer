@@ -2,6 +2,7 @@ use crate::error::{Error, Result};
 use crate::item::{Item, Location};
 use crate::itemset::ItemSet;
 use enum_map::EnumMap;
+use indicatif::ProgressBar;
 use itertools::Itertools;
 use serde::Deserialize;
 use std::convert::TryFrom;
@@ -103,13 +104,16 @@ impl Character {
             None => return Err(Error::NoCombinations),
         };
 
+        let pb = ProgressBar::new(upper_limit as u64);
         for combination in combinations {
             let set = ItemSet::try_from(combination)?;
 
             if set.value > best.value {
                 best = set;
             }
+            pb.inc(1);
         }
+        pb.finish();
 
         Ok(best)
     }
