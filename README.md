@@ -2,7 +2,7 @@
 
 An example RPG equipment combination optimizer, targetted at Medievia but it should be simple to adapt to other games.
 
-# To Do
+## To Do
 
 * [ ] Weight all attributes
   * [ ] Allow customisation of weights
@@ -10,3 +10,7 @@ An example RPG equipment combination optimizer, targetted at Medievia but it sho
 * [ ] Benchmarks
 * [ ] Tests
 * [ ] Parallel evaluation, perhaps using rayon
+
+## Screenshot
+
+![Screenshot](screenshot.png)
