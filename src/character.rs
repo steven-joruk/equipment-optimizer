@@ -1,8 +1,9 @@
-use crate::error::{Error, Result};
+use crate::error::Result;
 use crate::item::{Item, Location};
 use crate::itemset::ItemSet;
+
 use enum_map::EnumMap;
-use indicatif::ProgressBar;
+use indicatif::{ProgressBar, ProgressIterator};
 use itertools::Itertools;
 use serde::Deserialize;
 use std::convert::TryFrom;
@@ -30,7 +31,7 @@ pub struct Character {
 }
 
 impl Character {
-    pub fn new(level: u8, class: Class, align: Align, items: &[Item]) -> Self {
+    pub fn new(level: u8, class: Class, align: Align, items: Vec<Item>) -> Self {
         let mut ch = Character {
             level,
             class,
@@ -51,9 +52,7 @@ impl Character {
         // placeholder.
         for items in ch.usable.values_mut() {
             if items.is_empty() {
-                // TODO: Overwrite items which have matching (or worse) stats
-                // in the same slot.
-                items.push(Item::none())
+                items.push(Item::none());
             }
         }
 
@@ -66,54 +65,41 @@ impl Character {
             self.level, self.align, self.class
         );
 
-        let mut upper_limit = 0;
-        for (k, v) in &self.usable {
-            println!("    {:?}: {}", k, v.len());
-            upper_limit = if upper_limit == 0 { 1 } else { upper_limit } * v.len();
-        }
-
-        println!("There are at most {} combinations", upper_limit);
-
-        let mut combinations = vec![
-            &self.usable[Location::Light],
-            &self.usable[Location::Finger],
-            &self.usable[Location::Finger],
-            &self.usable[Location::Neck],
-            &self.usable[Location::Neck],
-            &self.usable[Location::Body],
-            &self.usable[Location::Head],
-            &self.usable[Location::Legs],
-            &self.usable[Location::Feet],
-            &self.usable[Location::Hands],
-            &self.usable[Location::Arms],
-            &self.usable[Location::Offhand],
-            &self.usable[Location::About],
-            &self.usable[Location::Waist],
-            &self.usable[Location::Wrist],
-            &self.usable[Location::Wrist],
-            &self.usable[Location::Wielded],
-            &self.usable[Location::Held],
-            &self.usable[Location::Aura],
-            &self.usable[Location::Spirit],
+        let combos = vec![
+            self.usable[Location::Light].iter(),
+            self.usable[Location::Finger].iter(),
+            self.usable[Location::Finger].iter(),
+            self.usable[Location::Neck].iter(),
+            self.usable[Location::Neck].iter(),
+            self.usable[Location::Body].iter(),
+            self.usable[Location::Head].iter(),
+            self.usable[Location::Legs].iter(),
+            self.usable[Location::Feet].iter(),
+            self.usable[Location::Hands].iter(),
+            self.usable[Location::Arms].iter(),
+            self.usable[Location::Offhand].iter(),
+            self.usable[Location::About].iter(),
+            self.usable[Location::Waist].iter(),
+            self.usable[Location::Wrist].iter(),
+            self.usable[Location::Wrist].iter(),
+            self.usable[Location::Wielded].iter(),
+            self.usable[Location::Held].iter(),
+            self.usable[Location::Aura].iter(),
+            self.usable[Location::Spirit].iter(),
         ]
         .into_iter()
         .multi_cartesian_product();
 
-        let mut best = match combinations.next() {
-            Some(c) => ItemSet::try_from(c)?,
-            None => return Err(Error::NoCombinations),
-        };
+        let pbar = ProgressBar::new(combos.size_hint().1.unwrap() as u64);
+        // Drawing is more costly than checking a set's value.
+        pbar.set_draw_delta(100_000);
 
-        let pb = ProgressBar::new(upper_limit as u64);
-        for combination in combinations {
-            let set = ItemSet::try_from(combination)?;
-
-            if set.value > best.value {
-                best = set;
-            }
-            pb.inc(1);
-        }
-        pb.finish();
+        let best = combos
+            .progress_with(pbar)
+            .map(ItemSet::try_from)
+            .map(|s| s.unwrap())
+            .max_by_key(|s| s.value)
+            .unwrap();
 
         Ok(best)
     }
@@ -122,5 +108,20 @@ impl Character {
         self.level >= eq.level
             && !eq.align_restrictions.contains(&self.align)
             && !eq.class_restrictions.contains(&self.class)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[bench]
+    fn bench_find_best_item_set(b: &mut test::Bencher) {
+        let items = vec![Item::none(), Item::none()];
+        let ch = Character::new(31, Class::Warrior, Align::Neutral, items);
+
+        b.iter(|| {
+            ch.find_best_item_set();
+        });
     }
 }
