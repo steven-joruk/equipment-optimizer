@@ -1,7 +1,9 @@
 use crate::item::Item;
+
 use std::convert::TryFrom;
 use std::fmt;
 
+#[derive(Clone)]
 pub struct ItemSet<'a> {
     pub value: i32,
     light: &'a Item,
@@ -71,7 +73,8 @@ impl<'a> TryFrom<Vec<&'a Item>> for ItemSet<'a> {
             + set.feet.value()
             + set.hands.value()
             + set.arms.value()
-            // TODO: Offhand attributes are calculated differently if dual wielding.
+            // TODO: Offhand attributes are calculated differently if dual
+            // wielding.
             + set.offhand.value()
             + set.about.value()
             + set.waist.value()

@@ -9,7 +9,6 @@ An example RPG equipment combination optimizer, targetted at Medievia but it sho
   * [ ] Allow lower and upper limits on attributes
 * [ ] Benchmarks
 * [ ] Tests
-* [ ] Parallel evaluation, perhaps using rayon
 
 ## Screenshot
 

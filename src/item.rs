@@ -1,7 +1,7 @@
 use crate::character::{Align, Class};
+
 use enum_map::Enum;
 use serde::Deserialize;
-
 use std::{
     cmp::{Ord, Ordering},
     fmt::{self, Display},
@@ -76,16 +76,7 @@ impl Item {
 
 impl Ord for Item {
     fn cmp(&self, other: &Self) -> Ordering {
-        let self_value = self.value();
-        let other_value = other.value();
-
-        if self_value < other_value {
-            Ordering::Greater
-        } else if self_value > other_value {
-            Ordering::Less
-        } else {
-            Ordering::Equal
-        }
+        self.value().cmp(&other.value())
     }
 }
 
