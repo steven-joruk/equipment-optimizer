@@ -11,7 +11,7 @@ edition = "2018"
 # codegen-units = 1
 
 [dependencies]
-enum-map = "0.6"
+enum-map = "2.0"
 indicatif = { version = "0.13", features = ["with_rayon"] }
 itertools = "0.8"
 num-format = "0.4"
